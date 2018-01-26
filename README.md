@@ -2,6 +2,10 @@
 
 ## How to start
 
+Copy docker-compose config from example:
+
+    cp docker-compose.yml.dist docker-compose.yml
+
 Install all submodules:
 
     git submodules init
@@ -35,4 +39,4 @@ Generate client config
 
 # Links
 
-    * https://github.com/Chocobozzz/OpenVPN-Admin
+* https://github.com/Chocobozzz/OpenVPN-Admin
