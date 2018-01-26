@@ -1,0 +1,5 @@
+/.idea/
+/configs/openvpn/
+/database/
+/logs/
+/docker-compose.yml

@@ -1,0 +1,3 @@
+[submodule "OpenVPN-Admin"]
+	path = OpenVPN-Admin
+	url = git@github.com:Chocobozzz/OpenVPN-Admin.git

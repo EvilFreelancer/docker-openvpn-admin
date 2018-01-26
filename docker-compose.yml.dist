@@ -1,0 +1,56 @@
+version: '2'
+
+services:
+  php:
+    build:
+      context: configs
+      args:
+        BUILDDEPS: libcurl4-openssl-dev libpng-dev libjpeg-dev libmcrypt-dev libxml2-dev libfreetype6-dev libzip-dev sed curl wget unzip
+        MODULES: mbstring mysqli pdo_mysql zip curl
+    volumes:
+      - ./OpenVPN-Admin:/var/www/html
+
+  openvpn:
+    image: kylemanna/openvpn
+    privileged: true
+    cap_add:
+     - NET_ADMIN
+    ports:
+      - "1194:1194/udp"
+    network_mode: host
+    volumes:
+      - ./configs/openvpn:/etc/openvpn
+      - ./OpenVPN-Admin:/var/www/html:delegated
+      - ./logs/openvpn:/var/log/openvpn
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8888:80"
+    volumes:
+      - ./configs/nginx.conf:/etc/nginx/conf.d/default.conf:delegated
+      - ./OpenVPN-Admin:/var/www/html:delegated
+      - ./logs/nginx:/var/log/nginx
+    links:
+      - php
+
+  mysql:
+    image: mysql:5.6
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_DATABASE=openvpn-admin
+      - MYSQL_ROOT_PASSWORD=rootrootroot
+      - MYSQL_USER=openvpn
+      - MYSQL_PASSWORD=openvpn_pass
+    volumes:
+      - ./database:/var/lib/mysql
+      - ./logs/mysql:/var/log/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80"
+    links:
+      - php
+      - "mysql:db"
