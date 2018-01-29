@@ -1,26 +1,51 @@
 version: '2'
 
 services:
-  php:
+  app:
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - "1194:1194/udp"
+    environment:
+      # Web-application parameters
+      - APP_PATH=/var/www/html
+      # Database parameters
+      - DB_HOST=172.17.0.1
+      - DB_PORT=3306
+      - DB_NAME=openvpn-admin
+      - DB_USER=openvpn
+      - DB_PASS=openvpn_pass
+      # OpenVPN settings
+      - VPN_CONF=/etc/openvpn
+      - VPN_ADDR=localhost
+      - VPN_PORT=1194
+      - VPN_PROTO=tcp
+      - VPN_GROUP=nogroup
+      - VPN_INIF=tun0
+      - VPN_OUTIF=eth0
+      - VPN_NET=10.8.0.0/24
+      # OpenVPN key parameters
+      - EASYRSA_KEY_SIZE=2048
+      - EASYRSA_CA_EXPIRE=3650
+      - EASYRSA_CERT_EXPIRE=3650
+      - EASYRSA_REQ_COUNTRY="US"
+      - EASYRSA_REQ_PROVINCE="California"
+      - EASYRSA_REQ_CITY="San Francisco"
+      - EASYRSA_REQ_ORG="Copyleft Certificate Co"
+      - EASYRSA_REQ_OU="My Organizational Unit"
+      - EASYRSA_REQ_EMAIL=me@example.net
+      - EASYRSA_REQ_CN=ChangeMe
+      - EASYRSA_BATCH=true
     build:
       context: configs
       args:
-        BUILDDEPS: libcurl4-openssl-dev libpng-dev libjpeg-dev libmcrypt-dev libxml2-dev libfreetype6-dev libzip-dev sed curl wget unzip
-        MODULES: mbstring mysqli pdo_mysql zip curl
+        DEB_PHP: nginx php php-fpm php-mbstring php-mysql php-zip php-curl
+        DEB_OPENVPN: openvpn openvpn-auth-ldap openvpn-auth-radius
+        DEB_OTHER: sed curl wget unzip
     volumes:
       - ./OpenVPN-Admin:/var/www/html
-
-  openvpn:
-    image: kylemanna/openvpn
-    privileged: true
-    cap_add:
-     - NET_ADMIN
-    ports:
-      - "1194:1194/udp"
-    network_mode: host
-    volumes:
-      - ./configs/openvpn:/etc/openvpn
-      - ./OpenVPN-Admin:/var/www/html:delegated
+      - ./openvpn:/etc/openvpn
       - ./logs/openvpn:/var/log/openvpn
 
   nginx:
@@ -32,7 +57,7 @@ services:
       - ./OpenVPN-Admin:/var/www/html:delegated
       - ./logs/nginx:/var/log/nginx
     links:
-      - php
+      - "app"
 
   mysql:
     image: mysql:5.6
@@ -52,5 +77,5 @@ services:
     ports:
       - "8080:80"
     links:
-      - php
+      - "app"
       - "mysql:db"
