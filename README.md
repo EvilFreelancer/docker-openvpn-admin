@@ -2,9 +2,20 @@
 
 ## How to start
 
+Clone the repo and chose the WIP (Work In Progress) branch:
+
+    git clone https://github.com/Chocobozzz/OpenVPN-Admin.git
+    cd OpenVPN-Admin
+    git checkout feature/refractoring
+
 Copy docker-compose config from example:
 
     cp docker-compose.yml.dist docker-compose.yml
+
+Now you need prepare your OpenVPN-Admin environment (of `php` service)
+and change parameters to which you need:
+
+    nano docker-compose.yml
 
 Install all submodules:
 
@@ -15,27 +26,39 @@ Build composition of containers:
 
     docker-compose build
 
-Generate configs and certificates of your OpenVPN server:
+Now you need install your OpenVPN server:
 
-    docker-compose run --rm openvpn ovpn_genconfig -u udp://{vpn_server_address}
-    docker-compose run --rm openvpn ovpn_initpki
+    docker-compose run app install
 
-Replace {vpn_server_address} with your server address, it could be
-IP address (10.10.10.2) or domain name (vpn.server.com).
+You can find all your certs and configurations of OpenVPN inside [openvpn] folder.
 
 Start the composition of containers:
 
     docker-composer up -d
 
-## OpenVPN
+## OpenVPN tools
 
-Generate client certificate:
+Install OpenVPN into the container:
 
-    docker-compose run --rm openvpn easyrsa build-client-full {client_name} nopass
+    docker-compose run app install
 
-Generate client config
+OpenVPN daemon commands:
 
-    docker-compose run --rm openvpn ovpn_getclient {client_name} > certificate.ovpn
+    docker-compose run app start
+    docker-compose run app stop
+    docker-compose run app restart
+
+## About folders
+
+* [configs] - Dockerfile build context, with nginx and PHP configuration files inside
+* [database] - root folder of local MySQL database
+* [OpenVPN-Admin] - sources of web application
+* [openvpn] - folder with all configurations of OpenVPN
+* [logs] - a lot of logs of daemons from containers
+
+# RoadMac
+
+* Need to fix bug with iptables and routes
 
 # Links
 
