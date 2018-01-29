@@ -1,12 +1,9 @@
 # Docker + OpenVPN + Web Admin
 
+This solution is adapted for WIP (Work In Progress) branch with
+`feature/refractoring` name.
+
 ## How to start
-
-Clone the repo and chose the WIP (Work In Progress) branch:
-
-    git clone https://github.com/Chocobozzz/OpenVPN-Admin.git
-    cd OpenVPN-Admin
-    git checkout feature/refractoring
 
 Copy docker-compose config from example:
 
@@ -19,8 +16,8 @@ and change parameters to which you need:
 
 Install all submodules:
 
-    git submodules init
-    git submodules update
+    git submodule init
+    git submodule update --remote
 
 Build composition of containers:
 
