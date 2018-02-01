@@ -10,20 +10,25 @@ services:
     environment:
       # Web-application parameters
       - APP_PATH=/var/www/html
+      - SCRIPTS_PATH=/var/www/html/scripts/auth-bash
       # Database parameters
-      - DB_HOST=172.17.0.1
+      - DB_HOST=mysql
       - DB_PORT=3306
       - DB_NAME=openvpn-admin
       - DB_USER=openvpn
       - DB_PASS=openvpn_pass
       # OpenVPN settings
       - VPN_CONF=/etc/openvpn
-      - VPN_ADDR=localhost
+      - VPN_LOCAL=192.168.1.2
+      - VPN_REMOTE=172.10.12.15
+      - VPN_USER=nobody
+      - VPN_GROUP=nogroup
       - VPN_PORT=1194
       - VPN_PROTO=tcp
-      - VPN_GROUP=nogroup
       - VPN_INIF=tun0
       - VPN_OUTIF=eth0
+      # TODO: Rewrite this part to ipcalc
+      - VPN_SERVER="10.8.0.0 255.255.255.0"
       - VPN_NET=10.8.0.0/24
       # OpenVPN key parameters
       - EASYRSA_KEY_SIZE=2048
@@ -42,11 +47,13 @@ services:
       args:
         DEB_PHP: nginx php php-fpm php-mbstring php-mysql php-zip php-curl
         DEB_OPENVPN: openvpn openvpn-auth-ldap openvpn-auth-radius
-        DEB_OTHER: sed curl wget unzip
+        DEB_OTHER: sed curl wget unzip iproute2 iptables
     volumes:
       - ./OpenVPN-Admin:/var/www/html
       - ./openvpn:/etc/openvpn
       - ./logs/openvpn:/var/log/openvpn
+    links:
+      - "mysql:db"
 
   nginx:
     image: nginx:latest
