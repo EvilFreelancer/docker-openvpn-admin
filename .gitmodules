@@ -1,4 +1,3 @@
-[submodule "OpenVPN-Admin"]
-	path = OpenVPN-Admin
+[submodule "app"]
+	path = app
 	url = https://github.com/Chocobozzz/OpenVPN-Admin.git
-	branch = feature/refractoring
