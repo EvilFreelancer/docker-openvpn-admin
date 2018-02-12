@@ -16,8 +16,7 @@ and change parameters to which you need:
 
 Install all submodules:
 
-    git submodule init
-    git submodule update --remote
+    git submodule update --init --remote
 
 Build composition of containers:
 
