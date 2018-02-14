@@ -6,7 +6,7 @@ services:
     cap_add:
       - NET_ADMIN
     ports:
-      - "1194:1194/udp"
+      - "1194:1194"
     environment:
       # Web-application parameters
       - APP_PATH=/var/www/html
@@ -23,7 +23,7 @@ services:
       # OpenVPN settings
       - VPN_CONF=/etc/openvpn
       - VPN_DEV=tun0
-      - VPN_LOCAL=192.168.1.2
+      - VPN_LOCAL=
       - VPN_LOCAL_PORT=1194
       - VPN_REMOTE=172.10.12.15
       - VPN_REMOTE_PORT=443

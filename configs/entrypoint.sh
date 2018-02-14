@@ -5,10 +5,9 @@ Available commands:
 
 - install-full - Full instalation MySQL+App+OpenVPN
 - install      - Install only OpenVPN
-- stop|start   - Stop or start OpenVPN daemon
-- restart      - Restart OpenVPN
 
 # Unstable
+- reinstall    - Reinstall OpenVPN (Warning! All content of /etc/openvpn will be erased!)
 - deinstall    - Remove application and whole settings
 - update       - Renew the database from migrations
 
@@ -22,14 +21,15 @@ case "$1" in
     "install")
         /var/www/html/scripts/install-openvpn.sh
         ;;
+    "reinstall")
+        rm -R /etc/openvpn/*
+        /var/www/html/scripts/install-openvpn.sh
+        ;;
     "update")
         /var/www/html/scripts/update.sh
         ;;
     "deinstall")
         /var/www/html/scripts/deinstall.sh
-        ;;
-    restart|stop|start)
-        /etc/init.d/openvpn "$1"
         ;;
     *)
         /etc/init.d/openvpn start
