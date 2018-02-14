@@ -11,6 +11,9 @@ services:
       # Web-application parameters
       - APP_PATH=/var/www/html
       - SCRIPTS_PATH=/var/www/html/scripts/auth-bash
+      - SCRIPTS_LOGIN=/var/www/html/scripts/auth-bash/login.sh
+      - SCRIPTS_CONNECT=/var/www/html/scripts/auth-bash/connect.sh
+      - SCRIPTS_DISCONNECT=/var/www/html/scripts/auth-bash/disconnect.sh
       # Database parameters
       - DB_HOST=mysql
       - DB_PORT=3306
@@ -19,14 +22,15 @@ services:
       - DB_PASS=openvpn_pass
       # OpenVPN settings
       - VPN_CONF=/etc/openvpn
+      - VPN_DEV=tun0
       - VPN_LOCAL=192.168.1.2
+      - VPN_LOCAL_PORT=1194
       - VPN_REMOTE=172.10.12.15
+      - VPN_REMOTE_PORT=443
       - VPN_USER=nobody
       - VPN_GROUP=nogroup
-      - VPN_PORT=1194
       - VPN_PROTO=tcp
-      - VPN_INIF=tun0
-      - VPN_OUTIF=eth0
+      - VPN_IF=eth0
       # TODO: Rewrite this part to ipcalc
       - VPN_SERVER="10.8.0.0 255.255.255.0"
       - VPN_NET=10.8.0.0/24
@@ -46,7 +50,7 @@ services:
       context: configs
       args:
         DEB_PHP: nginx php php-fpm php-mbstring php-mysql php-zip php-curl
-        DEB_OPENVPN: openvpn openvpn-auth-ldap openvpn-auth-radius
+        DEB_OPENVPN: openvpn openvpn-auth-ldap openvpn-auth-radius mysql-client
         DEB_OTHER: sed curl wget unzip iproute2 iptables
     volumes:
       - ./app:/var/www/html
