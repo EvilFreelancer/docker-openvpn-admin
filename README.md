@@ -30,7 +30,7 @@ You can find all your certs and configurations of OpenVPN inside [openvpn] folde
 
 Start the composition of containers:
 
-    docker-composer up -d
+    docker-compose up -d
 
 ## OpenVPN tools
 
